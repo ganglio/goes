@@ -17,6 +17,8 @@ type Client struct {
 	// The port to use
 	Port string
 
+	IsHTTPS bool
+
 	// Client is the http client used to make requests, allowing settings things
 	// such as timeouts etc
 	Client *http.Client

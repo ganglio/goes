@@ -41,7 +41,12 @@ func (s *GoesTestSuite) SetUpTest(c *C) {
 
 func (s *GoesTestSuite) TestNewClient(c *C) {
 	conn := NewClient(ESHost, ESPort)
-	c.Assert(conn, DeepEquals, &Client{ESHost, ESPort, http.DefaultClient})
+	c.Assert(conn, DeepEquals, &Client{ESHost, ESPort, false, http.DefaultClient})
+}
+
+func (s *GoesTestSuite) TestNewHTTPSClient(c *C) {
+	conn := NewHTTPSClient(ESHost, ESPort)
+	c.Assert(conn, DeepEquals, &Client{ESHost, ESPort, true, http.DefaultClient})
 }
 
 func (s *GoesTestSuite) TestWithHTTPClient(c *C) {
@@ -54,7 +59,7 @@ func (s *GoesTestSuite) TestWithHTTPClient(c *C) {
 	}
 	conn := NewClient(ESHost, ESPort).WithHTTPClient(cl)
 
-	c.Assert(conn, DeepEquals, &Client{ESHost, ESPort, cl})
+	c.Assert(conn, DeepEquals, &Client{ESHost, ESPort, false, cl})
 	c.Assert(conn.Client.Transport.(*http.Transport).DisableCompression, Equals, true)
 	c.Assert(conn.Client.Transport.(*http.Transport).ResponseHeaderTimeout, Equals, 1*time.Second)
 }

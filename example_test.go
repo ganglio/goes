@@ -11,7 +11,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/OwnLocal/goes"
+	"github.com/ganglio/goes"
 )
 
 var (

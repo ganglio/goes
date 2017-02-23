@@ -34,7 +34,11 @@ func (err *SearchError) Error() string {
 // This function is pretty useless for now but might be useful in a near future
 // if wee need more features like connection pooling or load balancing.
 func NewClient(host string, port string) *Client {
-	return &Client{host, port, http.DefaultClient}
+	return &Client{host, port, false, http.DefaultClient}
+}
+
+func NewHTTPSClient(host string, port string) *Client {
+	return &Client{host, port, true, http.DefaultClient}
 }
 
 // WithHTTPClient sets the http.Client to be used with the connection. Returns the original client.
@@ -495,7 +499,11 @@ func (c *Client) Do(r Requester) (*Response, error) {
 	if err != nil {
 		return &Response{}, err
 	}
-	req.URL.Scheme = "http"
+	if c.IsHTTPS {
+		req.URL.Scheme = "https"
+	} else {
+		req.URL.Scheme = "http"
+	}
 	req.URL.Host = fmt.Sprintf("%s:%s", c.Host, c.Port)
 
 	body, statusCode, err := c.doRequest(req)
